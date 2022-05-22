@@ -9,13 +9,16 @@ HEIGHT=800
 black = (0,0,0)
 white = (255,255,255)
 grey = (128, 128, 128)
+dark_grey = (50, 50, 50)
 green = (0, 255, 0)
 gold = (212, 175, 55)
 blue = (0, 255, 255)
 
+
 screen = pygame.display.set_mode([WIDTH, HEIGHT])
 pygame.display.set_caption('Beat Maker')
 label_font = pygame.font.Font('freesansbold.ttf', 32)
+medium_font = pygame.font.Font('freesansbold.ttf', 24)
 
 fps = 60
 timer = pygame.time.Clock()
@@ -37,6 +40,8 @@ kick = mixer.Sound('sounds/kick.WAV')
 crash = mixer.Sound('sounds/crash.WAV')
 clap = mixer.Sound('sounds/clap.WAV')
 tom = mixer.Sound('sounds/tom.WAV')
+pygame.mixer.set_num_channels(instruments * 3) # by default for the pygame mixer only have 8 channels - i.e. 8 simultaneous sounds. Could run out of sounds then pygame picks the right sounds. 3*per channel should work as long as we don't have a really fast tempo
+#
 
 def play_notes():
 	for i in range(len(clicked)):
@@ -97,6 +102,16 @@ while run:
 	screen.fill(black)
 	
 	boxes = draw_grid(clicked, active_beat)
+	# lower menu buttons
+	play_pause = pygame.draw.rect(screen, grey, [50, HEIGHT-150, 200, 100], 0, 5)
+	play_text = label_font.render('Play/Pause', True, white)
+	screen.blit(play_text, (70, HEIGHT - 130))
+	
+	if playing:
+		play_text2 = medium_font.render('Playing', True, dark_grey)
+	else:
+		play_text2 = medium_font.render('Paused', True, dark_grey)
+	screen.blit(play_text2, (70, HEIGHT - 100))
 	
 	if beat_changed:
 		play_notes()
@@ -113,6 +128,13 @@ while run:
 					coords = boxes[i][1]
 					# going to need a new list. Confusing way round here
 					clicked[coords[1]][coords[0]] *= -1 # need to set to opposite of what it was whenever clicked
+		
+		if event.type == pygame.MOUSEBUTTONUP:
+			if play_pause.collidepoint(event.pos):
+				if playing:
+					playing = False
+				elif not playing:
+					playing = True
 					
 	beat_length = 3600//bpm
 	
