@@ -104,14 +104,26 @@ while run:
 	boxes = draw_grid(clicked, active_beat)
 	# lower menu buttons
 	play_pause = pygame.draw.rect(screen, grey, [50, HEIGHT-150, 200, 100], 0, 5)
-	play_text = label_font.render('Play/Pause', True, white)
-	screen.blit(play_text, (70, HEIGHT - 130))
 	
+	# pause/play text
 	if playing:
-		play_text2 = medium_font.render('Playing', True, dark_grey)
+		play_text = label_font.render('Pause', True, white)
 	else:
-		play_text2 = medium_font.render('Paused', True, dark_grey)
-	screen.blit(play_text2, (70, HEIGHT - 100))
+		play_text = label_font.render('Play', True, white)
+	screen.blit(play_text, (100, HEIGHT - 115))
+	
+	# bpm stuff
+	bpm_rect = pygame.draw.rect(screen, grey, [300, HEIGHT - 150, 200, 100], 5, 5)
+	bpm_text = medium_font.render('Beats Per Minute', True, white)
+	screen.blit(bpm_text, (308, HEIGHT - 130))
+	bpm_text2 = label_font.render(f'{bpm}', True, white)
+	screen.blit(bpm_text2, (370, HEIGHT - 100))
+	bpm_add_rect = pygame.draw.rect(screen, grey, [510, HEIGHT-150, 48, 48], 0 , 5)
+	bpm_asub_rect = pygame.draw.rect(screen, grey, [510, HEIGHT-100, 48, 48], 0 , 5)
+	add_text = medium_font.render('+5', True, white)
+	sub_text = medium_font.render('-5', True, white)
+	screen.blit(add_text, (520, HEIGHT - 140))
+	screen.blit(sub_text, (520, HEIGHT - 90))
 	
 	if beat_changed:
 		play_notes()
